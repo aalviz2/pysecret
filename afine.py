@@ -36,6 +36,7 @@ def brute_force(mot):
             print
 
 if __name__ == '__main__':
+    # Point of entry in execution mode
     message ="LaventureaMelbournesesttermineebrutalementpourMarionBartoliLaFrancaiseopposeeaVeraZvonarevaen quartsdefinaledelOpendAustralienapasvulejourhormisendebutdepremiersetResultatunedefaiteendeuxmanches"
 
     print "Cipher text:"

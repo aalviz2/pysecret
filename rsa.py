@@ -117,7 +117,9 @@ class RSA(object):
 
 
     def __str__(self):
-        """Affichage élégant des clés."""
+        """
+        Pretty display of the keys.
+        """
         return """Private key: %s\nPublic key: %s\nModulo: %s""" % (self.a, self.b, self.n)
 
 

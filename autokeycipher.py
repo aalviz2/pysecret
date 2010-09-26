@@ -34,5 +34,6 @@ def bruteforce(mot):
     return "\n".join([str((cle, decrypt(mot, cle))) for cle in range(26)])
 
 if __name__ == '__main__':
+    # Point of entry in execution mode
     #print decrypt(encrypt("VIVELESVACANCES", 8), 8)
     print bruteforce(encrypt("QXQF VFLR TXLG VLWD PRUA", 8))

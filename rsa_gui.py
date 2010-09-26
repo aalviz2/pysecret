@@ -184,5 +184,5 @@ class KryptoKraphic(object):
 
 
 if __name__ == '__main__':
-    # Point d'entrée en mode exécution
+    # Point of entry in execution mode
     KryptoKraphic() # objet application
