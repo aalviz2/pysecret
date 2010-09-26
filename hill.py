@@ -21,14 +21,16 @@ def encrypt(word, matrix, encryption=True):
     Hill encryption (decryption).
     """
     word = word.upper()
-    if not utils.inversible(matrix):
-        return "Non inversible matrix"
+    if not utils.invertible(matrix):
+        # The matrix should be invertible.
+        return "Non invertible matrix"
     if len(word) % 2 != 0:
         word = word + 'X'
     couple = [list(word[i*2:(i*2)+2]) for i in range(0, len(word)/2)]
     result = [i[:] for i in couple]
     if not encryption:
-        matrix = utils.inv_matrix(matrix)
+        # To decrypt, just need to inverse the matrix.
+        matrix = utils.inverse_matrix(matrix)
     for i, c in enumerate(couple):
         result[i][0] = chr(((ord(c[0])-65) * matrix[0][0] + \
                                 (ord(c[1])-65) * matrix[0][1]) % 26 + 65)

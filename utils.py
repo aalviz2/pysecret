@@ -42,7 +42,9 @@ def pgcd_bezout(x,y):
     return (d, yp, xp - x/y * yp)
 
 def log(x, base = 10):
-    """Retourne le logarithme népérien de 'x'."""
+    """
+    Return the natural (népérien) logarithm of 'x'.
+    """
     return math.log(x) / math.log(base)
 
 def euler(nb):
@@ -84,10 +86,10 @@ def eqn_modulaire(a,b,m):
     """
     return (b * inv_modulo(a, m)) % m
 
-#
-# Tests de primalité classiques
-#
 
+#
+# Classical primality tests.
+#
 def premier(a, b):
     """Renvoie True si a et b sont premiers entre eux.
     """
@@ -111,26 +113,25 @@ def est_premier(n):
         return True
 
 
-
 #
-# Tests de primalité probabilistes
+# Probabilistic primality tests
 #
-
-
 def petit_theoreme_fermat(p):
     """Retourne True si p semble être premier, False si il ne l'est pas."""
     a = random.randint(1, p-1)
     return expo_modulaire_rapide(a, p - 1, p) == 1
 
 
-# Miller-Rabin. Première version.
+
 def miller_rabin_pass(a, n):
+    """
+    Miller-Rabin. First version.
+    """
     d = n - 1
     s = 0
     while d & 1:
         d = d >> 1
         s = s + 1
-
     a_to_power = expo_modulaire_rapide(a, d, n)
     if a_to_power == 1:
         return True
@@ -149,9 +150,10 @@ def miller_rabin_version1(n):
             return False
     return True
 
-
-# Miller-Rabin. Deuxième version.
 def millerTest(a, i, n):
+    """
+    Miller-Rabin. Second version.
+    """
     if i == 0:
         return 1
     x = millerTest(a, i / 2, n)
@@ -172,7 +174,9 @@ def miller_rabin_version2(n):
 
 # Jacobi
 def jacobi(a, b):
-    """Renvoie la valeur du symbol de Jacobi."""
+    """
+    Return the value of the Jacobi symbol.
+    """
     if a % b == 0:
         return 0
     result = 1
@@ -188,7 +192,8 @@ def jacobi(a, b):
     return result
 
 def jacobi_witness(x, n):
-    """Returns False if n is an Euler pseudo-prime with base x, and
+    """
+    Returns False if n is an Euler pseudo-prime with base x, and
     True otherwise.
     """
     j = jacobi(x, n) % n
@@ -204,7 +209,8 @@ def jacobi_witness(x, n):
 
 
 def reste_chinois(la,lm):
-    """Retourne la solution du théorème chinois.
+    """
+    Return the solution of the Chinese theorem.
     """
     M = reduce(operator.mul, lm)
     lM = [M/mi for mi in lm]
@@ -213,7 +219,8 @@ def reste_chinois(la,lm):
     return sum(laMy) % M
 
 def eratosthenes_prime_gen():
-    """Génère des nombres premiers avec le crible d'Eratosthenes.
+    """
+    Generates prime numbers with the sieve of Eratosthenes.
     """
     d = {}
     for i in itertools.count(2):
@@ -226,7 +233,8 @@ def eratosthenes_prime_gen():
             yield i
 
 def factorise(n):
-    """Factorise un nombre.
+    """
+    Factor a number.
     """
     factors = []
     for p in eratosthenes_prime_gen():
@@ -240,13 +248,15 @@ def factorise(n):
     return factors
 
 def nombrePremierListe(n):
-    """Renvoi la liste des nombre premier inférieurs à n.
+    """
+    Return the list of primes up to n.
     """
     generateur = eratosthenes()
     return [generateur.next() for _ in range(n)]
 
 def all_perms(liste):
-    """Renvoie toutes les permutations d'une liste.
+    """
+    Returns all permutations of a list.
     """
     if len(liste) <=1:
         yield liste
@@ -340,26 +350,26 @@ def racine_cubique(a):
             return i
     return None
 
-def inversible(matrice):
+def invertible(matrix):
     """
     Return True if a 2*2 matrix is inversible in Z26.
     """
-    determinant = matrice[0][0] * matrice[1][1] - \
-                    matrice[1][0] * matrice[0][1]
+    determinant = matrix[0][0] * matrix[1][1] - \
+                    matrix[1][0] * matrix[0][1]
     return pgcd(determinant, 26) == 1
 
-def inv_matrix(matrice):
+def inverse_matrix(matrix):
     """
-    Inverse une matrice 2*2.
+    Inverse a 2*2 matrix.
     """
-    if not inversible(matrice):
-        return "Non inversible matrix"
-    resultat = [i[:] for i in matrice]
-    resultat[0][0] = matrice[1][1]
-    resultat[1][1] = matrice[0][0]
-    resultat[1][0] = (-matrice[1][0]) % 26
-    resultat[0][1] = (-matrice[0][1]) % 26
-    return resultat
+    if not invertible(matrix):
+        return "Non invertible matrix"
+    result = [i[:] for i in matrix]
+    result[0][0] = matrix[1][1]
+    result[1][1] = matrix[0][0]
+    result[1][0] = (-matrix[1][0]) % 26
+    result[0][1] = (-matrix[0][1]) % 26
+    return result
 
 
 #
@@ -422,7 +432,7 @@ def int2bytes(number):
 
 
 if __name__ == '__main__':
-    # Point d'entrée en exécution
+    # Point of entry in execution mode
     #print equation([3,24], [[4, 19], [1, 1]])
     #print reste_chinois([5, 3, 7], [10, 17, 9])
     #print reste_chinois([4*inv_modulo(13,99),\

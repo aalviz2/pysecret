@@ -7,23 +7,23 @@ __date__ = "$Date: 2010/10/26 $"
 __copyright__ = "Copyright (c) 2009 Cedric Bonhomme"
 __license__ = "GPL v3"
 
-def encrypt(mot, cle):
+def encrypt(word, key):
     """
     Cesar encryption.
     """
-    return "".join([chr((ord(caractere)+ord(cle)%26)-65) for caractere in mot])
+    return "".join([chr((ord(character) + ord(key) % 26) - 65) for character in word])
 
-def decrypt(chaine, cle):
+def decrypt(chaine, key):
     """
     Cesar decryption.
     """
-    return "".join([chr((ord(caractere)-ord(cle))%26+65)  for caractere in chaine])
+    return "".join([chr((ord(character) - ord(key)) % 26 + 65)  for character in chaine])
 
-def bruteforce(mot):
+def bruteforce(word):
     """
     Cesar brute force.
     """
-    return "\n".join([str((chr(cle+65),decrypt(mot, chr(cle+65)))) for cle in range(26)])
+    return "\n".join([str((chr(key + 65), decrypt(word, chr(key + 65)))) for key in range(26)])
 
 if __name__ == '__main__':
     # Point of entry in execution mode
