@@ -341,10 +341,10 @@ def inversible(matrice):
                     matrice[1][0] * matrice[0][1]
     return pgcd(determinant, 26) == 1
 
-def inv_matrice(matrice):
+def inv_matrix(matrice):
     """Inverse une matrice 2*2."""
     if not inversible(matrice):
-        return "Matrice non inversible"
+        return "Non inversible matrix"
     resultat = [i[:] for i in matrice]
     resultat[0][0] = matrice[1][1]
     resultat[1][1] = matrice[0][0]

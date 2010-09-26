@@ -13,10 +13,13 @@ import random
 import utils
 
 class Rabin(object):
-    """Chiffrement de Rabin.
+    """
+    Rabin encryption.
     """
     def __init__(self, p = None, q = None, b = None, nb_bits = 256):
-        """Initialise les clés."""
+        """
+        Initialization of keys.
+        """
         if p == None and q == None:
             p = random.getrandbits(nb_bits)
             q = random.getrandbits(nb_bits)
@@ -32,11 +35,15 @@ class Rabin(object):
         self.b = b
 
     def encrypt(self, x):
-        """Chiffre le message."""
+        """
+        Encryption of the message.
+        """
         return pow(x, 2) + self.b * x
 
     def decrypt(self, y):
-        """Déchiffre le message."""
+        """
+        Decryption of the message.
+        """
         r1 = pow(y, (self.p+1)/4, self.p)
         r2 = pow(y, (self.q+1)/4, self.q)
 
@@ -46,12 +53,12 @@ class Rabin(object):
                 utils.reste_chinois([r1, -r2], [self.p, self.q]))
 
     def __str__(self):
-        """Affichage élégant des clés."""
-        return """\
-            Clé privée: %s
-            Clé publique: %s""" % ((self.p, self.q), self.b)
+        """
+        Pretty display of the keys.
+        """
+        return """Private key: %s\nPublic key: %s""" % ((self.p, self.q), self.b)
 
 if __name__ == '__main__':
-    # Point d'entrée en mode exécution.
+    # Point of entry in execution mode
     rabin = Rabin(nb_bits = 256)
     print rabin

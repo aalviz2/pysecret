@@ -10,7 +10,8 @@ __license__ = "GPL v3"
 import utils
 
 def encrypt(mot, permutation):
-    """Cryptage par permutation.
+    """
+    Permutation encryption.
     """
     n = len(permutation)
     tableau = [list(mot[i*n:(i*n)+n]) for i in range(0, len(mot)/n)]
@@ -24,7 +25,8 @@ def encrypt(mot, permutation):
     return "".join(["".join(i) for i in tableau])
 
 def decrypt(mot, permutation):
-    """Decryptage par permutation.
+    """
+    Permutation decryption.
     """
     n = len(permutation)
     tableau = [list(mot[i*n:(i*n)+n]) for i in range(0, len(mot)/n)]
@@ -35,9 +37,8 @@ def decrypt(mot, permutation):
     return "".join(["".join(i) for i in tableau])
 
 def bruteforce(mot):
-    """Brute force
-
-    Cryptanalyse par brute force du chiffremement par permutation.
+    """
+    Permutation brute force.
     """
     resultat = []
     for i in range(1, 6):
@@ -48,5 +49,6 @@ def bruteforce(mot):
 
 
 if __name__ == '__main__':
+    # Point of entry in execution mode
     #print decrypt(encrypt("BIENTOTLESVACANCES", [2,4,0,1,3]), [2,4,0,1,3])
     print bruteforce(encrypt("BIENTOTLESVACANCES", [2,4,0,1,3]))

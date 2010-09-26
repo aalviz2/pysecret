@@ -1,9 +1,9 @@
 #! /usr/local/bin/python
 #-*- coding: utf-8 -*-
 
-# Chiffrement et déchiffrement de Hill avec une matrix 2*2.
+# Hill encryption with a 2*2 matrix.
 #                        |11  8|
-# A = [[11,3], [8,7]] =  |3   7| avec A inversible dans Z26.
+# A = [[11,3], [8,7]] =  |3   7| with A inversible in Z26.
 #
 # Y = xA
 # x = YA
@@ -38,4 +38,5 @@ def hill(word, matrix, encryption = False):
 
 
 if __name__ == '__main__':
+    # Point of entry in execution mode
     print hill(hill("VIVELEPYTHON", [[11, 3], [8, 7]]), [[11, 3], [8, 7]], True)
