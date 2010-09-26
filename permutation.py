@@ -9,43 +9,43 @@ __license__ = "GPL v3"
 
 import utils
 
-def encrypt(mot, permutation):
+def encrypt(word, permutation):
     """
     Permutation encryption.
     """
     n = len(permutation)
-    tableau = [list(mot[i*n:(i*n)+n]) for i in range(0, len(mot)/n)]
-    if len(mot) % n != 0:
-        tableau.append(list(mot[(len(mot) - len(mot) % n):]))
-        tableau[-1].extend('X' * (n - len(mot) % n))
-    tmp = [i[:] for i in tableau]
-    for i, sous_chaine in enumerate(tableau):
+    table = [list(word[i*n:(i*n)+n]) for i in range(0, len(word)/n)]
+    if len(word) % n != 0:
+        table.append(list(word[(len(word) - len(word) % n):]))
+        table[-1].extend('X' * (n - len(word) % n))
+    tmp = [i[:] for i in table]
+    for i, sous_chaine in enumerate(table):
         for j, p in enumerate(permutation):
             sous_chaine[j] = tmp[i][p]
-    return "".join(["".join(i) for i in tableau])
+    return "".join(["".join(i) for i in table])
 
-def decrypt(mot, permutation):
+def decrypt(word, permutation):
     """
     Permutation decryption.
     """
     n = len(permutation)
-    tableau = [list(mot[i*n:(i*n)+n]) for i in range(0, len(mot)/n)]
-    tmp = [i[:] for i in tableau]
-    for i, sous_chaine in enumerate(tableau):
+    table = [list(word[i*n:(i*n)+n]) for i in range(0, len(word)/n)]
+    tmp = [i[:] for i in table]
+    for i, sous_chaine in enumerate(table):
         for j, p in enumerate(permutation):
             sous_chaine[p] = tmp[i][j]
-    return "".join(["".join(i) for i in tableau])
+    return "".join(["".join(i) for i in table])
 
-def bruteforce(mot):
+def bruteforce(word):
     """
     Permutation brute force.
     """
-    resultat = []
+    result = []
     for i in range(1, 6):
         if (len(mot) % i) == 0:
             for p in utils.all_perms(range(i)):
-                resultat.append(decrypt(mot, p))
-    return "\n".join(resultat)
+                result.append(decrypt(mot, p))
+    return "\n".join(result)
 
 
 if __name__ == '__main__':

@@ -22,17 +22,20 @@ import itertools
 # Arithmetic functions
 #
 def pgcd(x,y):
-    """Retourne le PGCD de x et y."""
-    assert x or y, "les deux arguments sont nuls " + `x, y`
+    """
+    Return the GCD of x and y.
+    """
+    assert x or y, "both arguments equals to zero " + `x, y`
     while y:
         (x, y) = (y, x%y)
     return abs(x)
 
 def pgcd_bezout(x,y):
-    """Retourne (d,u,v) tel que d == pgcd(a,b) == au + bv.
     """
-    assert x or y, "mauvais arguments " + `x, y`
-    assert x >= 0 and y >= 0, "mauvais arguments " + `x, y`
+    Return (d,u,v) such as d == pgcd(a,b) == au + bv.
+    """
+    assert x or y, "bad arguments " + `x, y`
+    assert x >= 0 and y >= 0, "bad arguments " + `x, y`
     if y == 0:
         return (x, 1, 0)
     (d, xp, yp) = pgcd_bezout(y , x%y)
@@ -43,7 +46,9 @@ def log(x, base = 10):
     return math.log(x) / math.log(base)
 
 def euler(nb):
-    """Calcul de Euler."""
+    """
+    Euler.
+    """
     return [a for a in range(0,nb) if pgcd(a,nb) == 1]
 
 
@@ -336,13 +341,17 @@ def racine_cubique(a):
     return None
 
 def inversible(matrice):
-    """Renvoie True si une matrice 2*2 est inversible dans Z26."""
+    """
+    Return True if a 2*2 matrix is inversible in Z26.
+    """
     determinant = matrice[0][0] * matrice[1][1] - \
                     matrice[1][0] * matrice[0][1]
     return pgcd(determinant, 26) == 1
 
 def inv_matrix(matrice):
-    """Inverse une matrice 2*2."""
+    """
+    Inverse une matrice 2*2.
+    """
     if not inversible(matrice):
         return "Non inversible matrix"
     resultat = [i[:] for i in matrice]
