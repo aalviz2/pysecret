@@ -42,9 +42,9 @@ def bruteforce(word):
     """
     result = []
     for i in range(1, 6):
-        if (len(mot) % i) == 0:
+        if (len(word) % i) == 0:
             for p in utils.all_perms(range(i)):
-                result.append(decrypt(mot, p))
+                result.append(decrypt(word, p))
     return "\n".join(result)
 
 
