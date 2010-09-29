@@ -30,7 +30,7 @@ def decrypt(cipher, key):
         else:
             message.append(character)
     return "".join(message)
-    
+
 
 def bruteforce(cypher):
     """
