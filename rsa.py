@@ -330,7 +330,7 @@ def verify(cypher, key):
 
 if __name__ == '__main__':
     # Point of entry in execution mode.
-    rsa_key_public, rsa_key_private = gen_pubpriv_keys(512)
+    rsa_key_public, rsa_key_private = gen_pubpriv_keys(128)
     print encrypt("Hello World", rsa_key_public)
     print
     print decrypt(encrypt("Hello World!", rsa_key_public), rsa_key_private)

@@ -42,10 +42,10 @@ def gcd_v2(p, q):
     6
     """
     if p<q:
-        return utils.gcd_v2(q, p)
+        return gcd_v2(q, p)
     if q == 0:
         return p
-    return utils.gcd_v2(q, abs(p%q))
+    return gcd_v2(q, abs(p%q))
 
 def extended_euclid_gcd_v1(a, b):
     """
@@ -105,7 +105,7 @@ def inv_modulo(a,m):
     """Retourne l'inverse modulaire de a modulo m.
     """
     assert m > 1, "mauvais arguments " + `a, m`
-    (d, x, _) = pgcd_bezout(a, m)
+    (d, x, _) = extended_euclid_gcd_v1(a, m)
     if d == 1:
         return x % m
     return None
@@ -390,7 +390,7 @@ def invertible(matrix):
     """
     determinant = matrix[0][0] * matrix[1][1] - \
                     matrix[1][0] * matrix[0][1]
-    return gcd(determinant, 26) == 1
+    return gcd_v1(determinant, 26) == 1
 
 def inverse_matrix(matrix):
     """

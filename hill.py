@@ -16,17 +16,17 @@ __license__ = "GPL v3"
 
 import utils
 
-def encrypt(word, matrix, encryption=True):
+def encrypt(message, matrix, encryption=True):
     """
     Hill encryption (decryption).
     """
-    word = word.upper()
+    message = message.upper()
     if not utils.invertible(matrix):
         # The matrix should be invertible.
         return "Non invertible matrix"
-    if len(word) % 2 != 0:
-        word = word + 'X'
-    couple = [list(word[i*2:(i*2)+2]) for i in range(0, len(word)/2)]
+    if len(message) % 2 != 0:
+        message = message + 'X'
+    couple = [list(message[i*2:(i*2)+2]) for i in range(0, len(message)/2)]
     result = [i[:] for i in couple]
     if not encryption:
         # To decrypt, just need to inverse the matrix.
@@ -38,11 +38,11 @@ def encrypt(word, matrix, encryption=True):
                                 (ord(c[1])-65) * matrix[1][1]) % 26 + 65)
     return "".join(["".join(i) for i in result])
 
-def decrypt (word, matrix):
+def decrypt (cypher, matrix):
     """
     Hill decryption.
     """
-    return encrypt(word, matrix, False)
+    return encrypt(cypher, matrix, False)
 
 if __name__ == '__main__':
     # Point of entry in execution mode

@@ -11,20 +11,20 @@ import string
 
 import utils
 
-def encrypt(mot, cle):
+def encrypt(message, cle):
     """
     Afine encryption.
     """
-    return [(chr(((ord(i) - 65) * cle[0] + cle[1]) % 26 + 65)) for i in mot]
+    return [(chr(((ord(i) - 65) * cle[0] + cle[1]) % 26 + 65)) for i in message]
 
-def decrypt(mot, cle):
+def decrypt(cypher, cle):
     """
     Afine decryption
     """
     inv = utils.inv_modulo(cle[0], 26)
-    return [(chr(((ord(i) - 65 - cle[1]) * inv) % 26 + 65)) for i in mot]
+    return [(chr(((ord(i) - 65 - cle[1]) * inv) % 26 + 65)) for i in cypher]
 
-def brute_force(mot):
+def brute_force(cypher):
     """"Brute force
     """
     valeurs_a = [1, 3, 5, 7, 9, 11, 15, 17, 19, 21, 23, 25]
@@ -32,7 +32,7 @@ def brute_force(mot):
     for i in valeurs_a:
         for j in valeurs_b:
             print (i, j)
-            print "".join(decrypt(mot, (i, j)))
+            print "".join(decrypt(cypher, (i, j)))
             print
 
 if __name__ == '__main__':
