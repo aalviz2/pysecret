@@ -193,7 +193,6 @@ def is_prime(number):
         # Not prime, according to Fermat's little theorem
         return False
     """
-
     if randomized_primality_testing(number, 5):
         # Prime, according to Jacobi
         return True
@@ -216,7 +215,6 @@ def getprime(nbits):
     """
 
     nbytes = int(math.ceil(nbits/8.))
-
     while True:
         integer = read_random_int(nbits)
 
@@ -268,9 +266,10 @@ def extended_euclid_gcd(a, b):
 
 # Main function: calculate encryption and decryption keys
 def calculate_keys(p, q, nbits):
-    """Calculates an encryption and a decryption key for p and q, and
-    returns them as a tuple (e, d)"""
-
+    """
+    Calculates an encryption and a decryption key for p and q, and
+    returns them as a tuple (e, d)
+    """
     n = p * q
     phi_n = (p-1) * (q-1)
 
@@ -292,7 +291,8 @@ def calculate_keys(p, q, nbits):
 
 
 def gen_keys(nbits):
-    """Generate RSA keys of nbits bits. Returns (p, q, e, d).
+    """
+    Generate RSA keys of nbits bits. Returns (p, q, e, d).
 
     Note: this can take a long time, depending on the key size.
     """
@@ -308,13 +308,13 @@ def gen_keys(nbits):
     return (p, q, e, d)
 
 def gen_pubpriv_keys(nbits):
-    """Generates public and private keys, and returns them as (pub,
+    """
+    Generates public and private keys, and returns them as (pub,
     priv).
 
     The public key consists of a dict {e: ..., , n: ....). The private
     key consists of a dict {d: ...., p: ...., q: ....).
     """
-
     (p, q, e, d) = gen_keys(nbits)
 
     return ( {'e': e, 'n': p*q}, {'d': d, 'p': p, 'q': q} )
@@ -336,24 +336,28 @@ def encrypt_int(message, ekey, n):
     return fast_exponentiation(message, ekey, n)
 
 def decrypt_int(cyphertext, dkey, n):
-    """Decrypts a cypher text using the decryption key 'dkey', working
-    modulo n"""
-
+    """
+    Decrypts a cypher text using the decryption key 'dkey', working
+    modulo n
+    """
     return encrypt_int(cyphertext, dkey, n)
 
 def sign_int(message, dkey, n):
-    """Signs 'message' using key 'dkey', working modulo n"""
-
+    """
+    Signs 'message' using key 'dkey', working modulo n
+    """
     return decrypt_int(message, dkey, n)
 
 def verify_int(signed, ekey, n):
-    """verifies 'signed' using key 'ekey', working modulo n"""
-
+    """
+    verifies 'signed' using key 'ekey', working modulo n
+    """
     return encrypt_int(signed, ekey, n)
 
 def picklechops(chops):
-    """Pickles and base64encodes it's argument chops"""
-
+    """
+    Pickles and base64encodes it's argument chops.
+    """
     value = zlib.compress(dumps(chops))
     encoded = base64.encodestring(value)
     return encoded.strip()
@@ -364,13 +368,13 @@ def unpicklechops(string):
     return loads(zlib.decompress(base64.decodestring(string)))
 
 def chopstring(message, key, n, funcref):
-    """Splits 'message' into chops that are at most as long as n,
+    """
+    Splits 'message' into chops that are at most as long as n,
     converts these into integers, and calls funcref(integer, key, n)
     for each chop.
 
     Used by 'encrypt' and 'sign'.
     """
-
     msglen = len(message)
     mbits = msglen * 8
     nbits = int(math.floor(math.log(n, 2)))
@@ -397,33 +401,26 @@ def gluechops(chops, key, n, funcref):
     Used by 'decrypt' and 'verify'.
     """
     message = ""
-
     chops = unpicklechops(chops)
-
     for cpart in chops:
         mpart = funcref(cpart, key, n)
         message += int2bytes(mpart)
-
     return message
 
 def encrypt(message, key):
     """Encrypts a string 'message' with the public key 'key'"""
-
     return chopstring(message, key['e'], key['n'], encrypt_int)
 
 def sign(message, key):
     """Signs a string 'message' with the private key 'key'"""
-
     return chopstring(message, key['d'], key['p']*key['q'], decrypt_int)
 
 def decrypt(cypher, key):
     """Decrypts a cypher with the private key 'key'"""
-
     return gluechops(cypher, key['d'], key['p']*key['q'], decrypt_int)
 
 def verify(cypher, key):
     """Verifies a cypher with the public key 'key'"""
-
     return gluechops(cypher, key['e'], key['n'], encrypt_int)
 
 

@@ -4,66 +4,69 @@
 __author__ = "Cedric Bonhomme"
 __version__ = "$Revision: 1.0 $"
 __date__ = "$Date: 2009/01/27 $"
-__copyright__ = "Copyright (c) 2009 Cedric Bonhomme"
-__license__ = "Python"
+__copyright__ = "Copyright (c) 2009-2010 Cedric Bonhomme"
+__license__ = "GPL v3"
 
 import utils
 
-def encrypt(mot, cle):
-    """Cryptage de Vigenère.
+def encrypt(word, key):
+    """
+    Vigenere encryption.
     """
     l, k = [], 0
-    for i in mot:
-        l.append(chr((ord(i) + ord(cle[k])) % 26 + 65))
-        k = (k+1) % len(cle)
+    for i in word:
+        l.append(chr((ord(i) + ord(key[k])) % 26 + 65))
+        k = (k+1) % len(key)
     return "".join(l)
 
-def decrypt(mot, cle):
-    """Décryptage de Vigenère.
+def decrypt(word, key):
+    """
+    Vigenere decryption.
     """
     l, k = [], 0
-    for i in mot:
-        l.append(chr((ord(i) - ord(cle[k])) % 26 + 65))
-        k = (k+1) % len(cle)
+    for i in word:
+        l.append(chr((ord(i) - ord(key[k])) % 26 + 65))
+        k = (k+1) % len(key)
     return "".join(l)
 
-def matrice_vig(cle):
-    """Matrice de vigenere
+def matrice_vig(key):
     """
-    l=[]
+    Matrice of Vigenere
+    """
+    l = []
     alp = "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
     l.append(alp)
-    for i in cle:
-        tmp=[]
+    for i in key:
+        tmp = []
         for j in alp:
-            tmp.append(chr((ord(i)+ord(j))%26+65))
+            tmp.append(chr((ord(i) + ord(j)) % 26 + 65))
         l.append("".join(tmp))
     return "\n".join(l)
 
-def analyse_vig(message, taille=None):
-    if taille==None:
+def analyse_vig(message, length=None):
+    if length == None:
         pass
 
     sch = []
-    for i in range(taille):
+    for i in range(length):
         s = ""
         j=i
         while j<len(message):
-            s+=message[j]
-            j+=taille
+            s += message[j]
+            j += length
         sch.append(s)
 
     print sch
 
-    cle=""
+    key=""
     for s in sch:
-        """ pour chaque sous-chaine, on calcule la cle necessaire pour que la
+        """ pour chaque sous-chaine, on calcule la key necessaire pour que la
         lettre la plus frequente corresponde a un E
         """
-        freq = utils.frequence(s)
+        freq = utils.word_frequency(s)
         print s, freq
-        cle+=chr(ord(freq[0][0])-4)
-    return cle
+        key += chr(ord(freq[0][0]) - 4)
+    return key
 
 if __name__ == '__main__':
     #print decrypt(encrypt("THISCRYPTOSYSTEMISNOTSECURE", "THEKEY"), "THEKEY")
@@ -78,7 +81,7 @@ WNOJNSIOFRWUCCESWKVIDGMUCGOCRUWGNMAAFFVNSIUDEKQHCEUCPFC\
 MPVSUDGAVEMNYMAMVLFMAOYFNTQCUAFVFJNXKLNEIWCWODCCULWRIFT\
 WGMUSWOVMATNYBUHTCOCWFYTNMGYTQMKBBNLGFBTWOJFTWGNTEJKNEE\
 DCLDHWTVBUVGFBIJG"
-    cle =  analyse_vig(encrypt("BONJOURCOMMENTALLEZVOUS", "SALUT"), 6)
+    key =  analyse_vig(encrypt("BONJOURCOMMENTALLEZVOUS", "SALUT"), 6)
 
-    print cle
-    #print decrypt(cry, cle)
+    print key
+    #print decrypt(cry, key)

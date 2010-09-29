@@ -4,7 +4,7 @@
 __author__ = "Cedric Bonhomme"
 __version__ = "$Revision: 0.1 $"
 __date__ = "$Date: 2010/10/26 $"
-__copyright__ = "Copyright (c) 2010 Cedric Bonhomme"
+__copyright__ = "Copyright (c) 2009-2010 Cedric Bonhomme"
 __license__ = "GPL v3"
 
 """Tool box.
@@ -92,13 +92,15 @@ def eqn_modulaire(a,b,m):
 # Classical primality tests.
 #
 def premier(a, b):
-    """Renvoie True si a et b sont premiers entre eux.
     """
-    assert a or b, "les deux arguments sont nuls " + `a, b`
+    Return True a and b are coprimes.
+    """
+    assert a or b, "both arguments are none " + `a, b`
     return pgcd(a, b) == 1
 
 def est_premier(n):
-    """Renvoie True si un nombre est premier, False sinon.
+    """
+    Return True if a number is prime, else False.
     """
     if n == 2:
         return True
@@ -118,7 +120,9 @@ def est_premier(n):
 # Probabilistic primality tests
 #
 def petit_theoreme_fermat(p):
-    """Retourne True si p semble être premier, False si il ne l'est pas."""
+    """
+    Return True if p seems to be prime. False if it is not.
+    """
     a = random.randint(1, p-1)
     return expo_modulaire_rapide(a, p - 1, p) == 1
 
@@ -266,11 +270,11 @@ def all_perms(liste):
             for i in range(len(perm)+1):
                 yield perm[:i] + liste[0:1] + perm[i:]
 
-def frequence(mot):
-    """Fréquence d'apparition des lettres d'un mot.
+def word_frequency(word):
+    """Fréquence d'apparition des lettres d'un word.
     """
     dic = {}
-    for i in mot:
+    for i in word:
         if i in dic:
             dic[i] = dic[i] + 1
         else:
@@ -386,12 +390,12 @@ def bin_to_decimal(x):
     return sum(map(lambda z: int(x[z]) and 2**(len(x) - z - 1),
                    range(len(x)-1, -1, -1)))
 
-def mot_to_bin(mot, count = 8):
-    """Transforme un mot en liste de binaires."""
-    return [int_to_bin(ord(i), count) for i in mot]
+def word_to_bin(word, count = 8):
+    """Transforme un word en liste de binaires."""
+    return [int_to_bin(ord(i), count) for i in word]
 
-def binList_to_mot(liste):
-    """Transforme une liste de binaires en mot."""
+def binList_to_word(liste):
+    """Transforme une liste de binaires en word."""
     return "".join([chr(bin_to_decimal(i)) for i in liste])
 
 def bytes2int(bytes):
@@ -441,7 +445,7 @@ if __name__ == '__main__':
     #print inv_modulo(8,31)
     #print factorise(121549788)
     #print est_premier(157)
-    #print mot_to_bin("SALUT")
-    #print binList_to_mot(mot_to_bin("SALUT"))
+    #print word_to_bin("SALUT")
+    #print binList_to_word(word_to_bin("SALUT"))
     #print miller_rabin_version2(100711433)
     print systeme_ordre_deux([[4, 2], [2, 3]], [24, 16])

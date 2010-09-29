@@ -4,7 +4,7 @@
 __author__ = "Cedric Bonhomme"
 __version__ = "$Revision: 0.1 $"
 __date__ = "$Date: 2010/10/26 $"
-__copyright__ = "Copyright (c) 2009 Cedric Bonhomme"
+__copyright__ = "Copyright (c) 2009-2010 Cedric Bonhomme"
 __license__ = "GPL v3"
 
 import math
