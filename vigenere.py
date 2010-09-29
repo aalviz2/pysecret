@@ -15,7 +15,10 @@ def encrypt(word, key):
     """
     l, k = [], 0
     for i in word:
-        l.append(chr((ord(i) + ord(key[k])) % 26 + 65))
+        if i.isalpha():
+            l.append(chr((ord(i) + ord(key[k])) % 26 + 65))
+        else:
+            l.append(i)
         k = (k+1) % len(key)
     return "".join(l)
 
@@ -25,7 +28,10 @@ def decrypt(word, key):
     """
     l, k = [], 0
     for i in word:
-        l.append(chr((ord(i) - ord(key[k])) % 26 + 65))
+        if i.isalpha():
+            l.append(chr((ord(i) - ord(key[k])) % 26 + 65))
+        else:
+            l.append(i)
         k = (k+1) % len(key)
     return "".join(l)
 
@@ -81,7 +87,11 @@ WNOJNSIOFRWUCCESWKVIDGMUCGOCRUWGNMAAFFVNSIUDEKQHCEUCPFC\
 MPVSUDGAVEMNYMAMVLFMAOYFNTQCUAFVFJNXKLNEIWCWODCCULWRIFT\
 WGMUSWOVMATNYBUHTCOCWFYTNMGYTQMKBBNLGFBTWOJFTWGNTEJKNEE\
 DCLDHWTVBUVGFBIJG"
-    key =  analyse_vig(encrypt("BONJOURCOMMENTALLEZVOUS", "SALUT"), 6)
 
-    print key
+
+    #key =  analyse_vig(encrypt("BONJOURCOMMENTALLEZVOUS", "SALUT"), 6)
+    #print key
     #print decrypt(cry, key)
+
+
+    print decrypt(encrypt("BONJOUR COMMENT ALLEZ VOUS ?", "SALUT"), "SALUT")
