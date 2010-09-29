@@ -58,7 +58,7 @@ def analyse_vig(message, length=None):
 
     print sch
 
-    key=""
+    key = ""
     for s in sch:
         """ pour chaque sous-chaine, on calcule la key necessaire pour que la
         lettre la plus frequente corresponde a un E

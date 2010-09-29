@@ -22,25 +22,54 @@ import itertools
 #
 # Arithmetic functions
 #
-def pgcd(x,y):
+def gcd_v1(x,y):
     """
-    Return the GCD of x and y.
+    Returns the greatest common divisor of p and q
+
+    >>> gcd(42, 6)
+    6
     """
     assert x or y, "both arguments equals to zero " + `x, y`
     while y:
         (x, y) = (y, x%y)
     return abs(x)
 
-def pgcd_bezout(x,y):
+def gcd_v2(p, q):
     """
-    Return (d,u,v) such as d == pgcd(a,b) == au + bv.
+    Returns the greatest common divisor of p and q
+
+    >>> gcd(42, 6)
+    6
+    """
+    if p<q:
+        return utils.gcd_v2(q, p)
+    if q == 0:
+        return p
+    return utils.gcd_v2(q, abs(p%q))
+
+def extended_euclid_gcd_v1(a, b):
+    """
+    Return (d,u,v) such as d == gcd(a,b) == au + bv.
+    """
+    assert a or b, "bad arguments " + `x, y`
+    assert a >= 0 and b >= 0, "bad arguments " + `x, y`
+    if b == 0:
+        return (a, 1, 0)
+    (d, ap, bp) = extended_euclid_gcd_v1(b , a%b)
+    return (d, bp, ap - a/b * bp)
+
+def extended_euclid_gcd_v2(a, b):
+    """
+    Returns a tuple (d, i, j) such that d = gcd(a, b) = ia + jb
     """
     assert x or y, "bad arguments " + `x, y`
     assert x >= 0 and y >= 0, "bad arguments " + `x, y`
-    if y == 0:
-        return (x, 1, 0)
-    (d, xp, yp) = pgcd_bezout(y , x%y)
-    return (d, yp, xp - x/y * yp)
+    if b == 0:
+        return (a, 1, 0)
+    q = abs(a % b)
+    r = long(a / b)
+    (d, k, l) = extended_euclid_gcd_v2(b, q)
+    return (d, l, k - l*r)
 
 def log(x, base = 10):
     """
@@ -52,16 +81,15 @@ def euler(nb):
     """
     Euler.
     """
-    return [a for a in range(0,nb) if pgcd(a,nb) == 1]
+    return [a for a in range(0,nb) if gcd(a,nb) == 1]
 
 
 #
 # Modular arithmetic functions
 #
-def expo_modulaire_rapide(a, p ,n):
-    """Calcul l'exposant modulaire (pow()).
-
-    Selon Wikipédia (http://fr.wikipedia.org/wiki/Exponentiation_modulaire)
+def fast_exponentiation(a, p, n):
+    """
+    Calculates r = a^p mod n
     """
     result = a % n
     remainders = []
@@ -96,7 +124,7 @@ def premier(a, b):
     Return True a and b are coprimes.
     """
     assert a or b, "both arguments are none " + `a, b`
-    return pgcd(a, b) == 1
+    return gcd(a, b) == 1
 
 def est_premier(n):
     """
@@ -119,13 +147,14 @@ def est_premier(n):
 #
 # Probabilistic primality tests
 #
-def petit_theoreme_fermat(p):
-    """
-    Return True if p seems to be prime. False if it is not.
-    """
-    a = random.randint(1, p-1)
-    return expo_modulaire_rapide(a, p - 1, p) == 1
 
+def fermat_little_theorem(p):
+    """
+    Returns 1 if p may be prime, and something else if p definitely
+    is not prime
+    """
+    a = randint(1, p-1)
+    return fast_exponentiation(a, p-1, p)
 
 
 def miller_rabin_pass(a, n):
@@ -179,9 +208,9 @@ def miller_rabin_version2(n):
 
 # Jacobi
 def jacobi(a, b):
+    """Calculates the value of the Jacobi symbol (a/b)
     """
-    Return the value of the Jacobi symbol.
-    """
+
     if a % b == 0:
         return 0
     result = 1
@@ -197,10 +226,10 @@ def jacobi(a, b):
     return result
 
 def jacobi_witness(x, n):
-    """
-    Returns False if n is an Euler pseudo-prime with base x, and
+    """Returns False if n is an Euler pseudo-prime with base x, and
     True otherwise.
     """
+
     j = jacobi(x, n) % n
     f = fast_exponentiation(x, (n-1)/2, n)
     if j == f:
@@ -319,7 +348,7 @@ def equation(mat1, mat2):
             if (c2 * i) % 31 == c1:
                 l.append(i)
         for i in l:
-            if pgcd(31, 6) != 1:
+            if gcd(31, 6) != 1:
                 l.remove(i)
 	a = l[0]
 
@@ -361,7 +390,7 @@ def invertible(matrix):
     """
     determinant = matrix[0][0] * matrix[1][1] - \
                     matrix[1][0] * matrix[0][1]
-    return pgcd(determinant, 26) == 1
+    return gcd(determinant, 26) == 1
 
 def inverse_matrix(matrix):
     """
@@ -400,6 +429,8 @@ def binList_to_word(liste):
 
 def bytes2int(bytes):
     """
+    Converts a list of bytes or a string to an integer
+
     >>> (128*256 + 64)*256 + + 15
     8405007
     >>> l = [128, 64, 15]
@@ -407,32 +438,33 @@ def bytes2int(bytes):
     8405007
     """
     if not (type(bytes) is types.ListType or type(bytes) is types.StringType):
-        raise TypeError("Liste ou String.")
+        raise TypeError("You must pass a string or a list")
 
     # Convert byte stream to integer
     integer = 0
     for byte in bytes:
-        integer <<= 8 #integer *= 256
-        if type(byte) is types.StringType:
-            byte = ord(byte)
+        integer *= 256
+        if type(byte) is types.StringType: byte = ord(byte)
         integer += byte
 
     return integer
 
 def int2bytes(number):
     """
+    Converts a number to a string of bytes
+
     >>> bytes2int(int2bytes(123456789))
     123456789
     """
+
     if not (type(number) is types.LongType or type(number) is types.IntType):
-        raise TypeError("Long ou String.")
+        raise TypeError("You must pass a long or an int")
 
     string = ""
 
     while number > 0:
         string = "%s%s" % (chr(number & 0xFF), string)
-        number >>= 8 #integer /= 256
-
+        number /= 256
     return string
 
 

@@ -25,78 +25,16 @@ import sys
 import types
 import zlib
 
-def gcd(p, q):
-    """Returns the greatest common divisor of p and q
-
-
-    >>> gcd(42, 6)
-    6
-    """
-    if p<q: return gcd(q, p)
-    if q == 0: return p
-    return gcd(q, abs(p%q))
-
-def bytes2int(bytes):
-    """Converts a list of bytes or a string to an integer
-
-    >>> (128*256 + 64)*256 + + 15
-    8405007
-    >>> l = [128, 64, 15]
-    >>> bytes2int(l)
-    8405007
-    """
-    if not (type(bytes) is types.ListType or type(bytes) is types.StringType):
-        raise TypeError("You must pass a string or a list")
-
-    # Convert byte stream to integer
-    integer = 0
-    for byte in bytes:
-        integer *= 256
-        if type(byte) is types.StringType: byte = ord(byte)
-        integer += byte
-
-    return integer
-
-def int2bytes(number):
-    """Converts a number to a string of bytes
-
-    >>> bytes2int(int2bytes(123456789))
-    123456789
-    """
-
-    if not (type(number) is types.LongType or type(number) is types.IntType):
-        raise TypeError("You must pass a long or an int")
-
-    string = ""
-
-    while number > 0:
-        string = "%s%s" % (chr(number & 0xFF), string)
-        number /= 256
-
-    return string
-
-def fast_exponentiation(a, p, n):
-    """
-    Calculates r = a^p mod n
-    """
-    result = a % n
-    remainders = []
-    while p != 1:
-        remainders.append(p & 1)
-        p = p >> 1
-    while remainders:
-        rem = remainders.pop()
-        result = ((a ** rem) * result ** 2) % n
-    return result
+import utils
 
 def read_random_int(nbits):
     """
     Reads a random integer of approximately nbits bits rounded up
-    to whole bytes
+    to whole bytes.
     """
     nbytes = ceil(nbits/8.)
     randomdata = os.urandom(nbytes)
-    return bytes2int(randomdata)
+    return utils.bytes2int(randomdata)
 
 def ceil(x):
     """
@@ -125,44 +63,11 @@ def randint(minvalue, maxvalue):
 
     return (read_random_int(nbits) % range) + minvalue
 
-def fermat_little_theorem(p):
-    """Returns 1 if p may be prime, and something else if p definitely
-    is not prime"""
 
-    a = randint(1, p-1)
-    return fast_exponentiation(a, p-1, p)
-
-def jacobi(a, b):
-    """Calculates the value of the Jacobi symbol (a/b)
-    """
-
-    if a % b == 0:
-        return 0
-    result = 1
-    while a > 1:
-        if a & 1:
-            if ((a-1)*(b-1) >> 2) & 1:
-                result = -result
-            b, a = a, b % a
-        else:
-            if ((b ** 2 - 1) >> 3) & 1:
-                result = -result
-            a = a >> 1
-    return result
-
-def jacobi_witness(x, n):
-    """Returns False if n is an Euler pseudo-prime with base x, and
-    True otherwise.
-    """
-
-    j = jacobi(x, n) % n
-    f = fast_exponentiation(x, (n-1)/2, n)
-
-    if j == f: return False
-    return True
 
 def randomized_primality_testing(n, k):
-    """Calculates whether n is composite (which is always correct) or
+    """
+    Calculates whether n is composite (which is always correct) or
     prime (which is incorrect with error probability 2**-k)
 
     Returns False if the number if composite, and True if it's
@@ -175,7 +80,8 @@ def randomized_primality_testing(n, k):
     t = ceil(k / math.log(1/q, 2))
     for i in range(t+1):
         x = randint(1, n-1)
-        if jacobi_witness(x, n): return False
+        if utils.jacobi_witness(x, n):
+            return False
 
     return True
 
@@ -189,7 +95,7 @@ def is_prime(number):
     """
 
     """
-    if not fermat_little_theorem(number) == 1:
+    if not utils.fermat_little_theorem(number) == 1:
         # Not prime, according to Fermat's little theorem
         return False
     """
@@ -238,31 +144,20 @@ def are_relatively_prime(a, b):
     0
     """
 
-    d = gcd(a, b)
+    d = utils.gcd_v1(a, b)
+    #d = utils.gcd_v2(a, b)
     return (d == 1)
 
 def find_p_q(nbits):
-    """Returns a tuple of two different primes of nbits bits"""
-
+    """
+    Returns a tuple of two different primes of nbits bits
+    """
     p = getprime(nbits)
     while True:
         q = getprime(nbits)
         if not q == p: break
 
     return (p, q)
-
-def extended_euclid_gcd(a, b):
-    """Returns a tuple (d, i, j) such that d = gcd(a, b) = ia + jb
-    """
-
-    if b == 0:
-        return (a, 1, 0)
-
-    q = abs(a % b)
-    r = long(a / b)
-    (d, k, l) = extended_euclid_gcd(b, q)
-
-    return (d, l, k - l*r)
 
 # Main function: calculate encryption and decryption keys
 def calculate_keys(p, q, nbits):
@@ -277,9 +172,10 @@ def calculate_keys(p, q, nbits):
         # Make sure e has enough bits so we ensure "wrapping" through
         # modulo n
         e = getprime(max(8, nbits/2))
-        if are_relatively_prime(e, n) and are_relatively_prime(e, phi_n): break
+        if are_relatively_prime(e, n) and are_relatively_prime(e, phi_n):
+            break
 
-    (d, i, j) = extended_euclid_gcd(e, phi_n)
+    (d, i, j) = utils.extended_euclid_gcd_v1(e, phi_n)
 
     if not d == 1:
         raise Exception("e (%d) and phi_n (%d) are not relatively prime" % (e, phi_n))
@@ -288,7 +184,6 @@ def calculate_keys(p, q, nbits):
         raise Exception("e (%d) and i (%d) are not mult. inv. modulo phi_n (%d)" % (e, i, phi_n))
 
     return (e, i)
-
 
 def gen_keys(nbits):
     """
@@ -333,7 +228,7 @@ def encrypt_int(message, ekey, n):
             math.floor(math.log(message, 2)) > math.floor(math.log(n, 2)):
         raise OverflowError("The message is too long")
 
-    return fast_exponentiation(message, ekey, n)
+    return utils.fast_exponentiation(message, ekey, n)
 
 def decrypt_int(cyphertext, dkey, n):
     """
@@ -363,8 +258,9 @@ def picklechops(chops):
     return encoded.strip()
 
 def unpicklechops(string):
-    """base64decodes and unpickes it's argument string into chops"""
-
+    """
+    base64decodes and unpickes it's argument string into chops
+    """
     return loads(zlib.decompress(base64.decodestring(string)))
 
 def chopstring(message, key, n, funcref):
@@ -389,13 +285,14 @@ def chopstring(message, key, n, funcref):
     for bindex in range(blocks):
         offset = bindex * nbytes
         block = message[offset:offset+nbytes]
-        value = bytes2int(block)
+        value = utils.bytes2int(block)
         cypher.append(funcref(value, key, n))
 
     return picklechops(cypher)
 
 def gluechops(chops, key, n, funcref):
-    """Glues chops back together into a string.  calls
+    """
+    Glues chops back together into a string.  calls
     funcref(integer, key, n) for each chop.
 
     Used by 'decrypt' and 'verify'.
@@ -404,27 +301,36 @@ def gluechops(chops, key, n, funcref):
     chops = unpicklechops(chops)
     for cpart in chops:
         mpart = funcref(cpart, key, n)
-        message += int2bytes(mpart)
+        message += utils.int2bytes(mpart)
     return message
 
 def encrypt(message, key):
-    """Encrypts a string 'message' with the public key 'key'"""
+    """
+    Encrypts a string 'message' with the public key 'key'
+    """
     return chopstring(message, key['e'], key['n'], encrypt_int)
 
 def sign(message, key):
-    """Signs a string 'message' with the private key 'key'"""
+    """
+    Signs a string 'message' with the private key 'key'
+    """
     return chopstring(message, key['d'], key['p']*key['q'], decrypt_int)
 
 def decrypt(cypher, key):
-    """Decrypts a cypher with the private key 'key'"""
+    """
+    Decrypts a cypher with the private key 'key'
+    """
     return gluechops(cypher, key['d'], key['p']*key['q'], decrypt_int)
 
 def verify(cypher, key):
-    """Verifies a cypher with the public key 'key'"""
+    """
+    Verifies a cypher with the public key 'key'
+    """
     return gluechops(cypher, key['e'], key['n'], encrypt_int)
-
 
 if __name__ == '__main__':
     # Point of entry in execution mode.
-    rsa_keys = gen_pubpriv_keys(512)
-    
+    rsa_key_public, rsa_key_private = gen_pubpriv_keys(512)
+    print encrypt("Hello World", rsa_key_public)
+    print
+    print decrypt(encrypt("Hello World!", rsa_key_public), rsa_key_private)

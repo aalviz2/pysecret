@@ -56,7 +56,7 @@ class El_gamal(object):
         """
         Pretty display of the keys.
         """
-        return """Public key: %s\nPrivate key: %s""" % % (self.pub, self.priv)
+        return """Public key: %s\nPrivate key: %s""" % (self.pub, self.priv)
 
 if __name__ == "__main__":
     # Point of entry in execution mode
