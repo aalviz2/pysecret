@@ -104,7 +104,7 @@ def fast_exponentiation(a, p, n):
 def inv_modulo(a,m):
     """Retourne l'inverse modulaire de a modulo m.
     """
-    assert m > 1, "mauvais arguments " + `a, m`
+    assert m > 1, "bad arguments " + `a, m`
     (d, x, _) = extended_euclid_gcd_v1(a, m)
     if d == 1:
         return x % m

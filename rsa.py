@@ -43,8 +43,9 @@ def ceil(x):
     return int(math.ceil(x))
 
 def randint(minvalue, maxvalue):
-    """Returns a random integer x with minvalue <= x <= maxvalue"""
-
+    """
+    Returns a random integer x with minvalue <= x <= maxvalue
+    """
     # Safety - get a lot of random data even if the range is fairly
     # small
     min_nbits = 32
@@ -62,8 +63,6 @@ def randint(minvalue, maxvalue):
     nbits = random.randint(min_nbits, rangebits)
 
     return (read_random_int(nbits) % range) + minvalue
-
-
 
 def randomized_primality_testing(n, k):
     """

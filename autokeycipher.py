@@ -35,5 +35,5 @@ def bruteforce(mot):
 
 if __name__ == '__main__':
     # Point of entry in execution mode
-    #print decrypt(encrypt("VIVELESVACANCES", 8), 8)
-    print bruteforce(encrypt("QXQF VFLR TXLG VLWD PRUA", 8))
+    print decrypt(encrypt("VIVELESVACANCES", 7), 7)
+    #print bruteforce(encrypt("QXQF VFLR TXLG VLWD PRUA", 8))

@@ -9,23 +9,36 @@ __license__ = "GPL v3"
 
 def encrypt(message, key):
     """
-    Cesar encryption.
+    Caesar encryption.
     """
-    return "".join([chr((ord(character) + ord(key) % 26) - 65) for character in message])
+    cipher = []
+    for character in message.upper():
+        if character.isalpha():
+            cipher.append(chr((ord(character) + ord(key.upper())) % 26 + 65))
+        else:
+            cipher.append(character)
+    return "".join(cipher)
 
-def decrypt(cypher, key):
+def decrypt(cipher, key):
     """
-    Cesar decryption.
+    Caesar decryption.
     """
-    return "".join([chr((ord(character) - ord(key)) % 26 + 65)  for character in cypher])
+    message = []
+    for character in cipher.upper():
+        if character.isalpha():
+            message.append(chr((ord (character) - ord(key.upper())) % 26 + 65))
+        else:
+            message.append(character)
+    return "".join(message)
+    
 
 def bruteforce(cypher):
     """
-    Cesar brute force.
+    Caesar brute force.
     """
     return "\n".join([str((chr(key + 65), decrypt(cypher, chr(key + 65)))) for key in range(26)])
 
 if __name__ == '__main__':
     # Point of entry in execution mode
-    #print decrypt(encrypt("BONJOUR", "B"))
-    print bruteforce(encrypt("BONJOUR", "B"))
+    print decrypt(encrypt("B ONJOuR", "B"), "b")
+    #print bruteforce(encrypt("BONJOUR", "B"))
