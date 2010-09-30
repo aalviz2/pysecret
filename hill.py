@@ -32,10 +32,11 @@ def encrypt(message, matrix, encryption=True):
         # To decrypt, just need to inverse the matrix.
         matrix = utils.inverse_matrix(matrix)
     for i, c in enumerate(couple):
-        result[i][0] = chr(((ord(c[0])-65) * matrix[0][0] + \
-                                (ord(c[1])-65) * matrix[0][1]) % 26 + 65)
-        result[i][1] = chr(((ord(c[0])-65) * matrix[1][0] + \
-                                (ord(c[1])-65) * matrix[1][1]) % 26 + 65)
+        if c[0].isalpha() and c[1].isalpha():
+            result[i][0] = chr(((ord(c[0])-65) * matrix[0][0] + \
+                                    (ord(c[1])-65) * matrix[0][1]) % 26 + 65)
+            result[i][1] = chr(((ord(c[0])-65) * matrix[1][0] + \
+                                    (ord(c[1])-65) * matrix[1][1]) % 26 + 65)
     return "".join(["".join(i) for i in result])
 
 def decrypt (cypher, matrix):
@@ -46,4 +47,5 @@ def decrypt (cypher, matrix):
 
 if __name__ == '__main__':
     # Point of entry in execution mode
-    print decrypt(encrypt("VIVELEPYTHON", [[11, 3], [8, 7]]), [[11, 3], [8, 7]])
+    print encrypt("Vivement les vacances !", [[11, 3], [8, 7]])
+    print decrypt(encrypt("Vivement les vacances !", [[11, 3], [8, 7]]), [[11, 3], [8, 7]])
